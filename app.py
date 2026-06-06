@@ -29,11 +29,11 @@ def add():
 
 @app.route('/edit/<int:id>', methods=['GET','POST'])
 def edit(id):
-    db = get_db(
-        if request,method =='POST':
+    db = get_db()
+    if request.method =='POST':
         date= request.form['date']
         type_ = request.form['type']
-        category =requets.form['category']
+        category =request.form['category']
         amount =float(request.form['amount'])
         note =request.form.get('note','')
         db.execute('UPDATE transactions SET date=?, type=?,category=?,amount=?,note=? WHERE id=?',(adte,type_,category,amount,note,id))
@@ -43,18 +43,18 @@ def edit(id):
         return redirect(url_for('index'))
         transaction =db.execute('SELECT * FROM transactions WHERE id=?',(id,)).fetchone()
         db.close()
-        retuen render_template('edit.html',transactions = transaction,categories=CATEGORIES)
+        return render_template('edit.html',transactions = transaction,categories=CATEGORIES)
 
-        @app.route('/delete/<int:id>', methods=['POST'])
-        def delete(id):
+@app.route('/delete/<int:id>', methods=['POST'])
+def delete(id):
         db=get_db()
-        db.execute('DELETE FROM transaction WHERE id =?',(id,))
+        db.execute('DELETE FROM transactions WHERE id =?',(id,))
         db.commit()
         db.close()
         return redirect(url_for('index'))
 
 
-        if __name__ =='__main__':
+if __name__ =='__main__':
         init_db()
         app.run(debug=True)
-    )
+    

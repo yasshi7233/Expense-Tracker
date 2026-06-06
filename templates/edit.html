@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h4> Edit Transaction</h4>
+<form method="POST" action="/edit/{{ transaction['id'] }}">
+    <div class="mb-3">
+        <label  class="form-label">Date</label>
+        <input type="date" name="date" class="form-control" 
+        value="{{ transaction['date'] }}" required>
+    </div>
+    <div class="mb-3">
+        <label  class="form-label">Type</label><br>
+        <input type="radio" name="type" value="income" {% if transaction['type'] == 'income' %}checked{% endif %} required> Income &nbsp;
+        <input type="radio" name="type" value="expense" {% if transaction['type'] == 'expense' %}checked{% endif %} required> Expense
+    </div>
+   
+    <div class="mb-3">
+        <label  class="form-label">Category</label>
+        <select name="category" class="form-select" required>
+            {% for cat in categories %}
+            <option value="{{ cat }}" 
+            {% if  cat == transaction['category'] %}selected{% endif %}>{{ cat }}
+        </option>
+         {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label  class="form-label">Amount</label>
+        <input type="number" name="amount" step="0.01" class="form-control" value="{{ transaction['amount'] }}" required>
+    </div>
+    <div class="mb-3">
+        <label  class="form-label">Note</label>
+        <input type ="text" name="note" class="form-control" 
+        value="{{ transaction['note'] or '' }}">
+    </div>
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a href ="/" class ="btn btn-secondary ms-2">Cancel</a>
+</form>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<div class ="d-flex justify-content-between align-items-center mb-3">
+    <h1>All Transactions</h1>
+    <a href="/add" class="btn btn-primary">Add Transaction</a>
+</div>
+<table class="table table-bordered table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>Date</th><th>Type </th><th>Category</th>
+                <th>Amount</th><th>Note</th><th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for t in transactions %}
+        <tr class="{% if t['type'] == 'income' %}table-success{% else %}table-danger{% endif %}">
+           <td>{{ t['date'] }}</td>
+           <td>{{ t['type'] }}</td>
+           <td>{{ t['category'] }}</td>
+           <td>${{ t['amount'] }}</td>
+           <td>{{ t['note'] }}</td>
+           <td>
+               <a href="/edit/{{ t['id'] }}" class="btn btn-sm btn-warning">Edit</a>
+               <form action ="/delete/{{t['id']}} " method="POST" style ="display:inline">
+                     <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+               </form>
+           </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

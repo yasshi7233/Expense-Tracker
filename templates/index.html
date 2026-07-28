@@ -1,32 +1,73 @@
 {% extends "base.html" %}
 {% block content %}
-<div class ="d-flex justify-content-between align-items-center mb-3">
-    <h1>All Transactions</h1>
-    <a href="/add" class="btn btn-primary">Add Transaction</a>
+
+<div class="section-header">
+  <h1><i class="bi bi-list-ul"></i> All Transactions</h1>
+  <div class="d-flex gap-2 align-items-center">
+    <div class="search-box">
+      <i class="bi bi-search search-icon"></i>
+      <input type="text" id="search-transactions" class="form-control" placeholder="Search transactions..." style="width:240px;">
+    </div>
+    <a href="/add" class="btn-custom btn-primary-custom">
+      <i class="bi bi-plus-lg"></i> Add
+    </a>
+  </div>
 </div>
-<table class="table table-bordered table-hover">
-    <thead class="table-dark">
-        <tr>
-            <th>Date</th><th>Type </th><th>Category</th>
-                <th>Amount</th><th>Note</th><th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for t in transactions %}
-        <tr class="{% if t['type'] == 'income' %}table-success{% else %}table-danger{% endif %}">
-           <td>{{ t['date'] }}</td>
-           <td>{{ t['type'] }}</td>
-           <td>{{ t['category'] }}</td>
-           <td>${{ t['amount'] }}</td>
-           <td>{{ t['note'] }}</td>
-           <td>
-               <a href="/edit/{{ t['id'] }}" class="btn btn-sm btn-warning">Edit</a>
-               <form action ="/delete/{{t['id']}} " method="POST" style ="display:inline">
-                     <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
-               </form>
-           </td>
-        </tr>
-        {% endfor %}
-    </tbody>
+
+{% if transactions %}
+<table class="table-custom">
+  <thead>
+    <tr>
+      <th data-sort="date">Date <span class="sort-icon">↕</span></th>
+      <th data-sort="type">Type <span class="sort-icon">↕</span></th>
+      <th data-sort="category">Category <span class="sort-icon">↕</span></th>
+      <th data-sort="amount">Amount <span class="sort-icon">↕</span></th>
+      <th>Note</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for t in transactions %}
+    <tr class="{% if t['type'] == 'income' %}row-income{% else %}row-expense{% endif %}">
+      <td>{{ t['date'] }}</td>
+      <td>
+        <span class="badge-custom {% if t['type'] == 'income' %}badge-income{% else %}badge-expense{% endif %}">
+          {{ t['type'] }}
+        </span>
+      </td>
+      <td>{{ t['category'] }}</td>
+      <td>Rs. {{ "%.2f"|format(t['amount']) }}</td>
+      <td>{{ t['note'] or '—' }}</td>
+      <td>
+        <div class="d-flex gap-1">
+          <a href="/edit/{{ t['id'] }}" class="btn-custom btn-sm-custom btn-warning-custom">
+            <i class="bi bi-pencil-fill"></i>
+          </a>
+          <form action="/delete/{{ t['id'] }}" method="POST" class="delete-form" style="display:inline;">
+            <button type="submit" class="btn-custom btn-sm-custom btn-danger-custom">
+              <i class="bi bi-trash3-fill"></i>
+            </button>
+          </form>
+        </div>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
+
+<div id="empty-search" class="empty-state" style="display:none;">
+  <i class="bi bi-search"></i>
+  <p>No transactions match your search.</p>
+</div>
+
+{% else %}
+<div class="empty-state">
+  <i class="bi bi-inbox"></i>
+  <p>No transactions yet. Start by adding one!</p>
+  <a href="/add" class="btn-custom btn-primary-custom mt-3">
+    <i class="bi bi-plus-lg"></i> Add Your First Transaction
+  </a>
+</div>
+{% endif %}
+
 {% endblock %}

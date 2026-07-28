@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="section-header">
+  <h4><i class="bi bi-pie-chart-fill"></i> Monthly Summary</h4>
+  <form method="GET" action="/summary" class="d-flex gap-2 form-custom">
+    <input type="month" name="month" value="{{ selected_month }}" style="width:auto;">
+    <button type="submit" class="btn-custom btn-primary-custom">
+      <i class="bi bi-arrow-right"></i> Go
+    </button>
+  </form>
+</div>
+
+<!-- Stat Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="stat-card stat-income animate-in">
+      <small><i class="bi bi-arrow-down-circle-fill"></i> Total Income</small>
+      <h3>Rs. {{ "%.2f"|format(total_income) }}</h3>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card stat-expense animate-in">
+      <small><i class="bi bi-arrow-up-circle-fill"></i> Total Expense</small>
+      <h3>Rs. {{ "%.2f"|format(total_expense) }}</h3>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card stat-balance {% if balance < 0 %}negative{% endif %} animate-in">
+      <small><i class="bi bi-wallet2"></i> Balance</small>
+      <h3>Rs. {{ "%.2f"|format(balance) }}</h3>
+    </div>
+  </div>
+</div>
+
+<!-- Charts -->
+<div class="row g-4 mb-4">
+  <div class="col-md-5">
+    <div class="chart-container">
+      {% if pie_chart %}
+        <img src="data:image/png;base64,{{ pie_chart }}" alt="Spending by category pie chart">
+      {% else %}
+        <div class="empty-state" style="border:none;">
+          <i class="bi bi-pie-chart"></i>
+          <p>No expense data for this month.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+  <div class="col-md-7">
+    <div class="chart-container">
+      {% if bar_chart %}
+        <img src="data:image/png;base64,{{ bar_chart }}" alt="Monthly income vs expense bar chart">
+      {% else %}
+        <div class="empty-state" style="border:none;">
+          <i class="bi bi-bar-chart-fill"></i>
+          <p>No data yet for bar chart.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Category Breakdown Table -->
+<h5 class="fw-black mb-3">
+  <i class="bi bi-list-columns-reverse"></i> Category Breakdown — {{ selected_month }}
+</h5>
+
+{% if categories %}
+<table class="table-custom">
+  <thead>
+    <tr>
+      <th data-sort="category">Category <span class="sort-icon">↕</span></th>
+      <th data-sort="amount">Amount <span class="sort-icon">↕</span></th>
+      <th data-sort="percent">% of Expenses <span class="sort-icon">↕</span></th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for cat, amt in zip(categories, amounts) %}
+    <tr class="row-expense">
+      <td><strong>{{ cat }}</strong></td>
+      <td>Rs. {{ "%.2f"|format(amt) }}</td>
+      <td>
+        <div class="d-flex align-items-center gap-2">
+          <div style="flex:1; height:8px; background:#e0dcd0; border-radius:50px; border:1px solid #bbb; overflow:hidden;">
+            <div style="width:{% if total_expense > 0 %}{{ (amt / total_expense * 100)|round }}{% else %}0{% endif %}%; height:100%; background:var(--clr-red); border-radius:50px;"></div>
+          </div>
+          <span style="font-size:0.8rem; font-weight:800; min-width:45px;">
+            {% if total_expense > 0 %}
+              {{ "%.1f"|format(amt / total_expense * 100) }}%
+            {% else %}0%{% endif %}
+          </span>
+        </div>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="empty-state">
+  <i class="bi bi-inbox"></i>
+  <p>No category data for this month.</p>
+</div>
+{% endif %}
+
+{% endblock %}

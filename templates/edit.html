@@ -1,39 +1,59 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h4> Edit Transaction</h4>
-<form method="POST" action="/edit/{{ transaction['id'] }}">
+<div class="section-header">
+  <h4><i class="bi bi-pencil-square"></i> Edit Transaction</h4>
+</div>
+
+<div class="card p-4 animate-in" style="max-width:600px;">
+  <form method="POST" action="/edit/{{ transaction['id'] }}" class="form-custom">
     <div class="mb-3">
-        <label  class="form-label">Date</label>
-        <input type="date" name="date" class="form-control" 
-        value="{{ transaction['date'] }}" required>
+      <label><i class="bi bi-calendar3"></i> Date</label>
+      <input type="date" name="date" value="{{ transaction['date'] }}" required>
     </div>
+
     <div class="mb-3">
-        <label  class="form-label">Type</label><br>
-        <input type="radio" name="type" value="income" {% if transaction['type'] == 'income' %}checked{% endif %} required> Income &nbsp;
-        <input type="radio" name="type" value="expense" {% if transaction['type'] == 'expense' %}checked{% endif %} required> Expense
+      <label><i class="bi bi-arrow-left-right"></i> Type</label>
+      <div class="radio-group mt-1">
+        <label>
+          <input type="radio" name="type" value="income" {% if transaction['type'] == 'income' %}checked{% endif %} required> 
+          <span class="badge-custom badge-income ms-1">Income</span>
+        </label>
+        <label>
+          <input type="radio" name="type" value="expense" {% if transaction['type'] == 'expense' %}checked{% endif %} required> 
+          <span class="badge-custom badge-expense ms-1">Expense</span>
+        </label>
+      </div>
     </div>
-   
+
     <div class="mb-3">
-        <label  class="form-label">Category</label>
-        <select name="category" class="form-select" required>
-            {% for cat in categories %}
-            <option value="{{ cat }}" 
-            {% if  cat == transaction['category'] %}selected{% endif %}>{{ cat }}
-        </option>
-         {% endfor %}
-        </select>
+      <label><i class="bi bi-tags-fill"></i> Category</label>
+      <select name="category" required>
+        {% for cat in categories %}
+        <option value="{{ cat }}" {% if cat == transaction['category'] %}selected{% endif %}>{{ cat }}</option>
+        {% endfor %}
+      </select>
     </div>
+
     <div class="mb-3">
-        <label  class="form-label">Amount</label>
-        <input type="number" name="amount" step="0.01" class="form-control" value="{{ transaction['amount'] }}" required>
+      <label><i class="bi bi-currency-rupee"></i> Amount</label>
+      <input type="number" name="amount" step="0.01" min="0.01" value="{{ transaction['amount'] }}" placeholder="Enter amount..." required>
     </div>
+
     <div class="mb-3">
-        <label  class="form-label">Note</label>
-        <input type ="text" name="note" class="form-control" 
-        value="{{ transaction['note'] or '' }}">
+      <label><i class="bi bi-pencil"></i> Note (optional)</label>
+      <input type="text" name="note" value="{{ transaction['note'] or '' }}" placeholder="What was this for?">
     </div>
-    <button type="submit" class="btn btn-primary">Update</button>
-    <a href ="/" class ="btn btn-secondary ms-2">Cancel</a>
-</form>
+
+    <div class="d-flex gap-2 mt-4">
+      <button type="submit" class="btn-custom btn-primary-custom">
+        <i class="bi bi-check-lg"></i> Update Transaction
+      </button>
+      <a href="/" class="btn-custom btn-outline-custom">
+        <i class="bi bi-x-lg"></i> Cancel
+      </a>
+    </div>
+  </form>
+</div>
+
 {% endblock %}

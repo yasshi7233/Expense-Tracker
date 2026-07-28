@@ -1,33 +1,59 @@
 {% extends "base.html" %}
 {% block content %}
-<h4> Add Transaction</h4>
-<form method="POST" action="/add">
+
+<div class="section-header">
+  <h4><i class="bi bi-plus-circle-fill"></i> Add Transaction</h4>
+</div>
+
+<div class="card p-4 animate-in" style="max-width:600px;">
+  <form method="POST" action="/add" class="form-custom">
     <div class="mb-3">
-        <label  class="form-label">Date</label>
-        <input type="date" name="date" class="form-control" required>
+      <label><i class="bi bi-calendar3"></i> Date</label>
+      <input type="date" name="date" required>
     </div>
+
     <div class="mb-3">
-        <label  class="form-label">Type</label><br>
-        <input type="radio" name="type" value="income" required> Income &nbsp;
-        <input type="radio" name="type" value="expense" required> Expense
+      <label><i class="bi bi-arrow-left-right"></i> Type</label>
+      <div class="radio-group mt-1">
+        <label>
+          <input type="radio" name="type" value="income" required> 
+          <span class="badge-custom badge-income ms-1">Income</span>
+        </label>
+        <label>
+          <input type="radio" name="type" value="expense" required> 
+          <span class="badge-custom badge-expense ms-1">Expense</span>
+        </label>
+      </div>
     </div>
+
     <div class="mb-3">
-        <label  class="form-label">Category</label>
-        <select name="category" class="form-select" required>
-            {% for cat in categories %}
-            <option value="{{ cat }}">{{ cat }}</option>
-            {% endfor %}
-        </select>
+      <label><i class="bi bi-tags-fill"></i> Category</label>
+      <select name="category" required>
+        {% for cat in categories %}
+        <option value="{{ cat }}">{{ cat }}</option>
+        {% endfor %}
+      </select>
     </div>
+
     <div class="mb-3">
-        <label  class="form-label">Amount</label>
-        <input type="number" name="amount" step="0.01"  min ="0.01"class="form-control" required>
+      <label><i class="bi bi-currency-rupee"></i> Amount</label>
+      <input type="number" name="amount" step="0.01" min="0.01" placeholder="Enter amount..." required>
     </div>
+
     <div class="mb-3">
-        <label  class="form-label">Note</label>
-        <input type ="text" name="note" class="form-control">
+      <label><i class="bi bi-pencil"></i> Note (optional)</label>
+      <input type="text" name="note" placeholder="What was this for?">
     </div>
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a href ="/" class ="btn btn-secondary ms-2">Cancel</a>
-</form>
+
+    <div class="d-flex gap-2 mt-4">
+      <button type="submit" class="btn-custom btn-success-custom">
+        <i class="bi bi-check-lg"></i> Save Transaction
+      </button>
+      <a href="/" class="btn-custom btn-outline-custom">
+        <i class="bi bi-x-lg"></i> Cancel
+      </a>
+    </div>
+  </form>
+</div>
+
 {% endblock %}

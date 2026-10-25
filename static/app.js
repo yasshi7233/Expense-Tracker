@@ -1,6 +1,6 @@
 /**
- * Expense Tracker — Interactive Frontend
- * Cartoon brutalist theme.
+ * Smart Spend — Interactive Frontend Polish
+ * Clean, modern interactions, table sorting, live search, and accessible delete confirmations.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initSearchFilter();
   initDeleteConfirm();
   initNavActive();
-  initAnimations();
 });
 
 /* ===== TABLE SORTING ===== */
@@ -43,11 +42,14 @@ function initSortableTables() {
 
 function sortTable(table, column, direction) {
   const tbody = table.querySelector('tbody');
+  if (!tbody) return;
   const rows = Array.from(tbody.querySelectorAll('tr'));
 
   const columnIndex = Array.from(table.querySelectorAll('thead th')).findIndex(
     th => th.dataset.sort === column
   );
+
+  if (columnIndex === -1) return;
 
   const multiplier = direction === 'asc' ? 1 : -1;
 
@@ -114,13 +116,15 @@ function initDeleteConfirm() {
       const overlay = document.createElement('div');
       overlay.className = 'confirm-overlay';
       overlay.innerHTML = `
-        <div class="confirm-dialog animate-in">
-          <i class="bi bi-exclamation-triangle-fill" style="font-size:2.5rem;color:var(--clr-orange);"></i>
-          <h5 class="mt-2 fw-black">Delete this transaction?</h5>
-          <p class="text-muted">This action cannot be undone.</p>
-          <div class="d-flex gap-2 justify-content-center mt-3">
-            <button class="btn-custom btn-outline-custom cancel-btn">Cancel</button>
-            <button class="btn-custom btn-danger-custom confirm-btn">Delete</button>
+        <div class="confirm-dialog">
+          <div class="mb-3 text-coral">
+            <i class="bi bi-exclamation-triangle" style="font-size: 2.25rem;"></i>
+          </div>
+          <h5 class="fw-bold mb-2">Delete this record?</h5>
+          <p class="text-muted small mb-4">This action is permanent and cannot be undone.</p>
+          <div class="d-flex gap-2 justify-content-center">
+            <button type="button" class="btn-custom btn-secondary-custom cancel-btn px-3 py-1">Cancel</button>
+            <button type="button" class="btn-custom btn-danger-custom confirm-btn px-3 py-1">Delete</button>
           </div>
         </div>
       `;
@@ -131,6 +135,12 @@ function initDeleteConfirm() {
         form.submit();
         overlay.remove();
       });
+
+      overlay.addEventListener('click', (evt) => {
+        if (evt.target === overlay) {
+          overlay.remove();
+        }
+      });
     });
   });
 }
@@ -138,34 +148,11 @@ function initDeleteConfirm() {
 /* ===== ACTIVE NAV LINK ===== */
 function initNavActive() {
   const currentPath = window.location.pathname;
-  document.querySelectorAll('.custom-nav .nav-link').forEach(link => {
-    link.classList.remove('active');
-    if (link.getAttribute('href') === currentPath) {
+  document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+    const href = link.getAttribute('href');
+    if (!href) return;
+    if (href === currentPath || (currentPath === '/' && href === '/')) {
       link.classList.add('active');
     }
-    // Home: also match "/" exactly since pathname could be "/"
-    if (currentPath === '/' && link.getAttribute('href') === '/') {
-      link.classList.add('active');
-    }
-  });
-}
-
-/* ===== ENTRANCE ANIMATIONS ===== */
-function initAnimations() {
-  // Staggered fade-in for table rows
-  document.querySelectorAll('.table-custom tbody tr').forEach((row, i) => {
-    row.style.opacity = '0';
-    row.style.transform = 'translateY(10px)';
-    row.style.transition = `all 0.2s ease ${i * 0.03}s`;
-    setTimeout(() => {
-      row.style.opacity = '1';
-      row.style.transform = 'translateY(0)';
-    }, 50);
-  });
-
-  // Bounce-in stat cards
-  document.querySelectorAll('.stat-card').forEach((card, i) => {
-    card.classList.add('animate-in');
-    card.style.animationDelay = `${i * 0.1}s`;
   });
 }

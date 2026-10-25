@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Account Settings — Smart Spend{% endblock %}
+{% block content %}
+
+<div class="section-header">
+  <div>
+    <h1 class="page-title"><i class="bi bi-person-gear text-teal me-2"></i>Account & Preferences</h1>
+    <p class="page-subtitle">Manage your profile information, emergency fund target, and security</p>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="card p-4">
+      <div class="card-header-clean mb-3">
+        <h3 class="card-title"><i class="bi bi-person-badge text-teal me-2"></i>Profile Information</h3>
+      </div>
+      <form method="POST" action="{{ url_for('auth.profile') }}" class="form-custom">
+        {{ profile_form.hidden_tag() }}
+        <input type="hidden" name="update_profile" value="1">
+
+        <div class="mb-3">
+          <label class="form-label">{{ profile_form.name.label }}</label>
+          {{ profile_form.name(class="form-control") }}
+          {% for error in profile_form.name.errors %}
+            <span class="text-coral small fw-semibold mt-1 d-block">{{ error }}</span>
+          {% endfor %}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Email Address</label>
+          <input type="text" class="form-control" value="{{ current_user.email }}" disabled>
+          <small class="text-muted">Account email cannot be modified.</small>
+        </div>
+
+        <button type="submit" class="btn-custom btn-primary-custom mt-2">
+          <i class="bi bi-check2 me-1"></i> Save Changes
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-lg-6">
+    <div class="card p-4">
+      <div class="card-header-clean mb-3">
+        <h3 class="card-title"><i class="bi bi-shield-lock text-teal me-2"></i>Change Password</h3>
+      </div>
+      <form method="POST" action="{{ url_for('auth.profile') }}" class="form-custom">
+        {{ password_form.hidden_tag() }}
+        <input type="hidden" name="change_password" value="1">
+
+        <div class="mb-3">
+          <label class="form-label">{{ password_form.current_password.label }}</label>
+          {{ password_form.current_password(class="form-control", placeholder="Current password") }}
+          {% for error in password_form.current_password.errors %}
+            <span class="text-coral small fw-semibold mt-1 d-block">{{ error }}</span>
+          {% endfor %}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">{{ password_form.new_password.label }}</label>
+          {{ password_form.new_password(class="form-control", placeholder="At least 6 characters") }}
+          {% for error in password_form.new_password.errors %}
+            <span class="text-coral small fw-semibold mt-1 d-block">{{ error }}</span>
+          {% endfor %}
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">{{ password_form.confirm_new_password.label }}</label>
+          {{ password_form.confirm_new_password(class="form-control", placeholder="Repeat new password") }}
+          {% for error in password_form.confirm_new_password.errors %}
+            <span class="text-coral small fw-semibold mt-1 d-block">{{ error }}</span>
+          {% endfor %}
+        </div>
+
+        <button type="submit" class="btn-custom btn-secondary-custom mt-2">
+          <i class="bi bi-key me-1"></i> Update Password
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

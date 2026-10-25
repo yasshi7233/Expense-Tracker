@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Add Transaction — Smart Spend{% endblock %}
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-md-7 col-lg-6">
+    <div class="section-header mb-3">
+      <div>
+        <h1 class="page-title"><i class="bi bi-plus-circle text-teal me-2"></i>Add Transaction</h1>
+        <p class="page-subtitle">Record an income deposit or everyday expense</p>
+      </div>
+    </div>
+
+    <div class="card p-4">
+      <form method="POST" action="{{ url_for('transactions.add') }}" class="form-custom">
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+          <label>{{ form.date.label }}</label>
+          {{ form.date(class="form-control") }}
+          {% for error in form.date.errors %}
+            <span class="text-danger small fw-semibold">{{ error }}</span>
+          {% endfor %}
+        </div>
+
+        <div class="row g-2 mb-3">
+          <div class="col-md-6">
+            <label>{{ form.type.label }}</label>
+            {{ form.type(class="form-select") }}
+            {% for error in form.type.errors %}
+              <span class="text-danger small fw-semibold">{{ error }}</span>
+            {% endfor %}
+          </div>
+          <div class="col-md-6">
+            <label>{{ form.category.label }}</label>
+            {{ form.category(class="form-select") }}
+            {% for error in form.category.errors %}
+              <span class="text-danger small fw-semibold">{{ error }}</span>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label>{{ form.amount.label }}</label>
+          <div class="input-group">
+            <span class="input-group-text bg-light text-muted">Rs.</span>
+            {{ form.amount(class="form-control", placeholder="0.00", step="0.01") }}
+          </div>
+          {% for error in form.amount.errors %}
+            <span class="text-danger small fw-semibold d-block mt-1">{{ error }}</span>
+          {% endfor %}
+        </div>
+
+        <div class="mb-4">
+          <label>{{ form.note.label }}</label>
+          {{ form.note(class="form-control", placeholder="e.g. Swiggy dinner with teammates") }}
+          {% for error in form.note.errors %}
+            <span class="text-danger small fw-semibold">{{ error }}</span>
+          {% endfor %}
+        </div>
+
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn-custom btn-primary-custom flex-grow-1">
+            <i class="bi bi-check-lg"></i> Save Transaction
+          </button>
+          <a href="{{ url_for('transactions.index') }}" class="btn-custom btn-outline-custom">
+            Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

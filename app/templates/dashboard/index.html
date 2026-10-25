@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Smart Spend{% endblock %}
+{% block content %}
+
+<!-- Header & Period Filter -->
+<div class="section-header">
+  <div>
+    <h1 class="page-title"><i class="bi bi-grid-1x2 text-teal me-2"></i>Financial Overview</h1>
+    <p class="page-subtitle">Showing cash flow summary for <strong>{{ period_label }}</strong></p>
+  </div>
+  <div class="d-flex flex-wrap gap-2 align-items-center">
+    <!-- Month Picker Quick Filter -->
+    <form method="GET" action="{{ url_for('dashboard.index') }}" class="d-flex gap-1 align-items-center">
+      <input type="month" name="month" value="{{ selected_month }}" class="form-control form-control-sm" style="width: auto;">
+      <button type="submit" class="btn-custom btn-sm-custom btn-secondary-custom">Month</button>
+    </form>
+    <!-- Range Filter Toggle/Modal or Inline -->
+    <button class="btn-custom btn-sm-custom btn-outline-custom" data-bs-toggle="collapse" data-bs-target="#customRangeCollapse">
+      <i class="bi bi-calendar-range me-1"></i> Custom Range
+    </button>
+  </div>
+</div>
+
+<!-- Custom Range Filter Collapse -->
+<div class="collapse {% if start_date or end_date %}show{% endif %} mb-4" id="customRangeCollapse">
+  <div class="card p-3 bg-white">
+    <form method="GET" action="{{ url_for('dashboard.index') }}" class="row g-2 align-items-center">
+      <div class="col-sm-5">
+        <label class="form-label small text-muted mb-1">Start Date</label>
+        <input type="date" name="start_date" value="{{ start_date }}" class="form-control form-control-sm">
+      </div>
+      <div class="col-sm-5">
+        <label class="form-label small text-muted mb-1">End Date</label>
+        <input type="date" name="end_date" value="{{ end_date }}" class="form-control form-control-sm">
+      </div>
+      <div class="col-sm-2 d-flex align-items-end">
+        <button type="submit" class="btn-custom btn-sm-custom btn-primary-custom w-100 mt-sm-4">Apply Range</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Legacy unclaimed warning banner if any exists -->
+{% if has_unclaimed %}
+<div class="alert alert-warning d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <i class="bi bi-info-circle me-2"></i>
+    <strong>Unclaimed Legacy Records:</strong> Found transactions from before authentication was enabled.
+  </div>
+  <form method="POST" action="{{ url_for('transactions.claim_legacy') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button type="submit" class="btn-custom btn-sm-custom btn-primary-custom">Claim Records</button>
+  </form>
+</div>
+{% endif %}
+
+<!-- Key Metrics Stat Cards -->
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="stat-card">
+      <span class="stat-label"><i class="bi bi-arrow-down-circle text-teal me-1"></i> Total Income</span>
+      <div class="stat-value text-teal tabular-nums">₹{{ "%.2f"|format(total_income) }}</div>
+      <span class="text-muted small">{{ period_label }}</span>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card">
+      <span class="stat-label"><i class="bi bi-arrow-up-circle text-coral me-1"></i> Total Expenses</span>
+      <div class="stat-value text-coral tabular-nums">₹{{ "%.2f"|format(total_expense) }}</div>
+      <span class="text-muted small">{{ period_label }}</span>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="stat-card">
+      <span class="stat-label"><i class="bi bi-wallet2 text-main me-1"></i> Net Savings</span>
+      <div class="stat-value {% if net_savings >= 0 %}text-teal{% else %}text-coral{% endif %} tabular-nums">
+        {% if net_savings < 0 %}-₹{{ "%.2f"|format(net_savings|abs) }}{% else %}₹{{ "%.2f"|format(net_savings) }}{% endif %}
+      </div>
+      <span class="text-muted small">Income minus expenses for selected period</span>
+    </div>
+  </div>
+</div>
+
+<!-- Charts Section -->
+<div class="row g-4 mb-4">
+  <!-- Spending by Category -->
+  <div class="col-lg-5">
+    <div class="card p-4 h-100">
+      <div class="card-header-clean mb-3">
+        <h3 class="card-title"><i class="bi bi-pie-chart text-teal me-2"></i>Spending by Category</h3>
+      </div>
+      <div class="chart-container text-center">
+        {% if pie_chart %}
+          <img src="data:image/png;base64,{{ pie_chart }}" alt="Spending by category" class="img-fluid rounded">
+        {% else %}
+          <div class="empty-state py-5">
+            <div class="empty-icon"><i class="bi bi-pie-chart"></i></div>
+            <p class="text-muted mb-0">No expense data recorded for {{ period_label }}.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Monthly Trend -->
+  <div class="col-lg-7">
+    <div class="card p-4 h-100">
+      <div class="card-header-clean mb-3">
+        <h3 class="card-title"><i class="bi bi-bar-chart text-teal me-2"></i>Monthly Cash Flow Trend</h3>
+      </div>
+      <div class="chart-container text-center">
+        {% if bar_chart %}
+          <img src="data:image/png;base64,{{ bar_chart }}" alt="Monthly income vs expense trend" class="img-fluid rounded">
+        {% else %}
+          <div class="empty-state py-5">
+            <div class="empty-icon"><i class="bi bi-bar-chart"></i></div>
+            <p class="text-muted mb-0">No historical data available yet to display monthly trend.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Transactions & Quick Actions -->
+<div class="card p-4 mb-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h3 class="card-title mb-0"><i class="bi bi-clock-history text-teal me-2"></i>Recent Transactions</h3>
+      <small class="text-muted">Your latest logged incomes and expenses</small>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="{{ url_for('transactions.add') }}" class="btn-custom btn-sm-custom btn-primary-custom">
+        <i class="bi bi-plus-lg me-1"></i> Add Transaction
+      </a>
+      <a href="{{ url_for('transactions.index') }}" class="btn-custom btn-sm-custom btn-outline-custom">
+        View All
+      </a>
+    </div>
+  </div>
+
+  {% if recent_transactions %}
+    <div class="table-responsive">
+      <table class="table-custom mb-0">
+        <thead>
+          <tr>
+            <th style="width: 130px;">Date</th>
+            <th style="width: 110px;">Type</th>
+            <th style="width: 160px;">Category</th>
+            <th>Description</th>
+            <th class="text-end" style="width: 140px;">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in recent_transactions %}
+            <tr>
+              <td class="text-muted small">{{ t.date }}</td>
+              <td>
+                <span class="badge-custom {% if t.type == 'income' %}badge-income{% else %}badge-expense{% endif %}">
+                  {{ t.type|capitalize }}
+                </span>
+              </td>
+              <td class="fw-semibold">{{ t.category }}</td>
+              <td class="text-muted">{{ t.note or '—' }}</td>
+              <td class="text-end fw-bold tabular-nums {% if t.type == 'income' %}text-teal{% else %}text-coral{% endif %}">
+                {% if t.type == 'income' %}+{% else %}-{% endif %} ₹{{ "%.2f"|format(t.amount) }}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="empty-state py-4">
+      <div class="empty-icon"><i class="bi bi-receipt"></i></div>
+      <p class="text-muted mb-2">No transactions recorded yet.</p>
+      <a href="{{ url_for('transactions.add') }}" class="btn-custom btn-sm-custom btn-primary-custom">
+        <i class="bi bi-plus-lg me-1"></i> Log Your First Transaction
+      </a>
+    </div>
+  {% endif %}
+</div>
+
+{% endblock %}

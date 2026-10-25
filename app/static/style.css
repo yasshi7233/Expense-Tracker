@@ -1,0 +1,772 @@
+/* ==========================================================================
+   SMART SPEND — Modern Warm Finance Theme
+   Clean, trustworthy, approachable, human-designed aesthetic.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Primary & Accent Palette */
+  --navy: #243447;
+  --navy-dark: #1A2634;
+  --navy-light: #334458;
+
+  --teal: #0F766E;
+  --teal-hover: #0D655E;
+  --teal-light: #E6F4F1;
+  --mint: #DDF4E7;
+
+  --warm-bg: #FAF8F5;
+  --surface: #FFFFFF;
+  --surface-alt: #F4F1EA;
+
+  --coral: #E11D48;
+  --coral-light: #FCE4DE;
+  --amber: #D97706;
+  --amber-light: #FEF3C7;
+  --soft-blue: #E8F0FE;
+  --blue-text: #1D4ED8;
+
+  --slate-50: #F8FAFC;
+  --slate-100: #F1F5F9;
+  --slate-200: #E2E8F0;
+  --slate-300: #CBD5E1;
+  --slate-400: #94A3B8;
+  --slate-500: #64748B;
+  --slate-700: #334155;
+  --slate-800: #1E293B;
+
+  /* Typography */
+  --font-heading: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-num: 'Plus Jakarta Sans', 'Inter', tabular-nums, sans-serif;
+
+  /* Elevation & Borders */
+  --border-subtle: 1px solid #E5E7EB;
+  --border-focus: 1px solid #0F766E;
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --radius-pill: 9999px;
+
+  --shadow-xs: 0 1px 2px 0 rgba(16, 24, 40, 0.04);
+  --shadow-sm: 0 1px 3px 0 rgba(16, 24, 40, 0.07), 0 1px 2px -1px rgba(16, 24, 40, 0.04);
+  --shadow-md: 0 4px 8px -2px rgba(16, 24, 40, 0.06), 0 2px 4px -2px rgba(16, 24, 40, 0.04);
+  --shadow-lg: 0 10px 18px -3px rgba(16, 24, 40, 0.08), 0 4px 6px -4px rgba(16, 24, 40, 0.03);
+
+  --transition-fast: 0.15s ease;
+  --transition-smooth: 0.2s ease;
+
+  /* Aliases for template compatibility */
+  --color-navy: var(--navy);
+  --color-teal: var(--teal);
+  --color-mint-light: var(--mint);
+  --color-warm-bg: var(--warm-bg);
+  --color-surface: var(--surface);
+  --color-border: #E5E7EB;
+  --color-coral: var(--coral);
+  --color-coral-light: var(--coral-light);
+  --color-amber: var(--amber);
+  --color-blue: #2563EB;
+  --color-blue-light: var(--soft-blue);
+  --color-text-main: var(--navy);
+  --color-text-muted: var(--slate-500);
+}
+
+/* Typography and Color Utility Helpers */
+.text-main { color: var(--navy) !important; }
+.text-teal { color: var(--teal) !important; }
+.text-coral { color: var(--coral) !important; }
+.text-amber { color: var(--amber) !important; }
+.text-blue { color: #2563EB !important; }
+.tabular-nums { font-family: var(--font-num) !important; font-variant-numeric: tabular-nums !important; }
+
+/* Subtitle & Badge Utilities */
+.page-title {
+  font-family: var(--font-heading);
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 0.25rem;
+}
+
+.page-subtitle {
+  font-size: 0.9rem;
+  color: var(--slate-500);
+  margin-bottom: 0;
+}
+
+.card-header-clean {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-title {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 0;
+}
+
+.bg-teal-subtle {
+  background-color: var(--teal-light) !important;
+  color: var(--teal) !important;
+}
+
+.bg-mint-subtle {
+  background-color: var(--mint) !important;
+  color: var(--teal) !important;
+}
+
+.bg-coral-subtle {
+  background-color: var(--coral-light) !important;
+  color: #9F1239 !important;
+}
+
+.bg-slate-subtle {
+  background-color: var(--slate-100) !important;
+  color: var(--slate-700) !important;
+}
+
+.btn-secondary-custom {
+  background-color: var(--slate-100);
+  color: var(--navy) !important;
+  border: 1px solid var(--slate-300);
+}
+
+.btn-secondary-custom:hover {
+  background-color: var(--slate-200);
+  color: var(--navy) !important;
+}
+
+/* Base Document */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--warm-bg);
+  color: var(--navy);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6, .navbar-brand {
+  font-family: var(--font-heading);
+  color: var(--navy);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-top: 0;
+}
+
+.num-font {
+  font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ==========================================================================
+   Navigation Bar
+   ========================================================================== */
+.custom-nav {
+  background: var(--surface);
+  border-bottom: var(--border-subtle);
+  box-shadow: var(--shadow-xs);
+  padding: 0.75rem 0;
+}
+
+.custom-nav .navbar-brand {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--navy) !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.custom-nav .navbar-brand i {
+  color: var(--teal);
+  font-size: 1.35rem;
+}
+
+.custom-nav .nav-link {
+  color: var(--slate-700) !important;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.45rem 0.85rem !important;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.custom-nav .nav-link:hover {
+  color: var(--navy) !important;
+  background-color: var(--slate-100);
+}
+
+.custom-nav .nav-link.active {
+  color: var(--teal) !important;
+  background-color: var(--teal-light);
+  font-weight: 700;
+}
+
+.navbar-toggler {
+  border: 1px solid var(--slate-300);
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--radius-sm);
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  border: var(--border-subtle);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.dropdown-item {
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.5rem 0.85rem;
+  border-radius: var(--radius-xs);
+  color: var(--slate-700);
+}
+
+.dropdown-item:hover {
+  background-color: var(--slate-100);
+  color: var(--navy);
+}
+
+/* ==========================================================================
+   Section Headers
+   ========================================================================== */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.section-header h1,
+.section-header h2,
+.section-header h4 {
+  font-size: 1.65rem;
+  margin: 0;
+  font-weight: 700;
+}
+
+.section-header p,
+.section-header small {
+  font-size: 0.9rem;
+  color: var(--slate-500);
+  margin-top: 0.2rem;
+  display: block;
+}
+
+/* ==========================================================================
+   Card System
+   ========================================================================== */
+.card {
+  background: var(--surface);
+  border: var(--border-subtle);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-xs);
+  transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.card:hover {
+  box-shadow: var(--shadow-sm);
+  border-color: var(--slate-300);
+}
+
+/* Safe-to-Spend Feature Banner Card */
+.sts-card {
+  background: linear-gradient(135deg, #FFFFFF 0%, #FAF8F5 100%);
+  border: 1px solid #E2E8F0;
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.sts-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background-color: var(--teal);
+}
+
+.sts-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--teal);
+  background: var(--teal-light);
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius-pill);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.75rem;
+}
+
+.sts-amount {
+  font-family: var(--font-num);
+  font-size: 2.75rem;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1.15;
+  margin-bottom: 0.4rem;
+}
+
+.sts-subtext {
+  font-size: 0.95rem;
+  color: var(--slate-700);
+  font-weight: 500;
+}
+
+.sts-daily-badge {
+  background: var(--surface);
+  color: var(--teal);
+  border: 1px solid var(--slate-200);
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-num);
+  font-weight: 700;
+}
+
+/* Breakdown Panel */
+.breakdown-box {
+  background: var(--surface);
+  border: 1px solid var(--slate-200);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+}
+
+.breakdown-box h6 {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--slate-500);
+  margin-bottom: 0.85rem;
+}
+
+.breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.45rem 0;
+  font-size: 0.88rem;
+  color: var(--slate-700);
+}
+
+.breakdown-row:not(:last-child) {
+  border-bottom: 1px dashed var(--slate-200);
+}
+
+.breakdown-row strong {
+  font-family: var(--font-num);
+  font-weight: 700;
+}
+
+/* Stat Cards (Income, Expense, Net) */
+.stat-card {
+  padding: 1.35rem 1.5rem;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: var(--border-subtle);
+  box-shadow: var(--shadow-xs);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.stat-card small,
+.stat-card .stat-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--slate-500);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.4rem;
+}
+
+.stat-card h3,
+.stat-card .stat-value {
+  font-family: var(--font-num);
+  font-size: 1.75rem;
+  font-weight: 800;
+  margin: 0;
+  color: var(--navy);
+  line-height: 1.2;
+}
+
+.stat-income small i, .stat-income .stat-label i { color: var(--teal); }
+.stat-income h3, .stat-income .stat-value { color: var(--teal); }
+
+.stat-expense small i, .stat-expense .stat-label i { color: var(--coral); }
+.stat-expense h3, .stat-expense .stat-value { color: var(--coral); }
+
+.stat-balance small i, .stat-balance .stat-label i { color: var(--blue-text); }
+.stat-balance h3, .stat-balance .stat-value { color: var(--navy); }
+.stat-balance.negative h3, .stat-balance.negative .stat-value { color: var(--coral); }
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+.btn-custom {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.55rem 1.15rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  text-decoration: none !important;
+  transition: all var(--transition-fast);
+}
+
+.btn-primary-custom {
+  background-color: var(--teal);
+  color: #FFFFFF !important;
+}
+
+.btn-primary-custom:hover {
+  background-color: var(--teal-hover);
+  color: #FFFFFF !important;
+}
+
+.btn-success-custom {
+  background-color: #059669;
+  color: #FFFFFF !important;
+}
+
+.btn-success-custom:hover {
+  background-color: #047857;
+}
+
+.btn-warning-custom {
+  background-color: var(--amber);
+  color: #FFFFFF !important;
+}
+
+.btn-warning-custom:hover {
+  background-color: #B45309;
+}
+
+.btn-danger-custom {
+  background-color: var(--coral);
+  color: #FFFFFF !important;
+}
+
+.btn-danger-custom:hover {
+  background-color: #BE123C;
+}
+
+.btn-outline-custom {
+  background-color: var(--surface);
+  color: var(--slate-700) !important;
+  border: 1px solid var(--slate-300);
+}
+
+.btn-outline-custom:hover {
+  background-color: var(--slate-100);
+  color: var(--navy) !important;
+  border-color: var(--slate-400);
+}
+
+.btn-sm-custom {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+/* ==========================================================================
+   Tables
+   ========================================================================== */
+.table-custom {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  border: var(--border-subtle);
+  border-radius: var(--radius);
+  background: var(--surface);
+  overflow: hidden;
+  box-shadow: var(--shadow-xs);
+}
+
+.table-custom thead th {
+  background-color: var(--slate-50);
+  color: var(--slate-700);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--slate-200);
+  cursor: pointer;
+  user-select: none;
+}
+
+.table-custom thead th:hover {
+  background-color: var(--slate-100);
+}
+
+.table-custom thead th .sort-icon {
+  margin-left: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--slate-400);
+}
+
+.table-custom tbody td {
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--slate-100);
+  font-size: 0.88rem;
+  color: var(--slate-800);
+  vertical-align: middle;
+}
+
+.table-custom tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.table-custom tbody tr {
+  transition: background-color var(--transition-fast);
+}
+
+.table-custom tbody tr:hover {
+  background-color: var(--slate-50);
+}
+
+/* Transaction Types Badges */
+.badge-custom {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-pill);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.badge-income {
+  background-color: var(--mint);
+  color: #065F46;
+}
+
+.badge-expense {
+  background-color: var(--coral-light);
+  color: #9F1239;
+}
+
+/* ==========================================================================
+   Forms & Inputs
+   ========================================================================== */
+.form-custom label {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--navy);
+  margin-bottom: 0.35rem;
+  display: block;
+}
+
+.form-control,
+.form-select,
+.form-custom input[type="text"],
+.form-custom input[type="number"],
+.form-custom input[type="date"],
+.form-custom input[type="month"],
+.form-custom input[type="password"],
+.form-custom select,
+.form-custom textarea {
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid var(--slate-300);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  color: var(--navy);
+  background-color: #FFFFFF;
+  box-shadow: var(--shadow-xs);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.form-control:focus,
+.form-select:focus,
+.form-custom input:focus,
+.form-custom select:focus,
+.form-custom textarea:focus {
+  outline: none;
+  border-color: var(--teal);
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+}
+
+.form-control::placeholder {
+  color: var(--slate-400);
+}
+
+/* ==========================================================================
+   Alerts & Feedback
+   ========================================================================== */
+.alert {
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  padding: 0.85rem 1.15rem;
+  font-size: 0.9rem;
+  box-shadow: var(--shadow-xs);
+}
+
+.alert-success {
+  background-color: #ECFDF5;
+  border-color: #A7F3D0;
+  color: #065F46;
+}
+
+.alert-warning {
+  background-color: #FFFBEB;
+  border-color: #FDE68A;
+  color: #92400E;
+}
+
+.alert-danger {
+  background-color: #FFF1F2;
+  border-color: #FECDD3;
+  color: #9F1239;
+}
+
+.alert-info {
+  background-color: var(--soft-blue);
+  border-color: #BFDBFE;
+  color: #1E40AF;
+}
+
+/* ==========================================================================
+   Chart Containers
+   ========================================================================== */
+.chart-container {
+  background: var(--surface);
+  border: var(--border-subtle);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 280px;
+}
+
+.chart-container img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-xs);
+}
+
+/* ==========================================================================
+   Empty States
+   ========================================================================== */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  border: 1px dashed var(--slate-300);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.empty-state i {
+  font-size: 2.25rem;
+  color: var(--slate-400);
+  margin-bottom: 0.65rem;
+  display: inline-block;
+}
+
+.empty-state h4, .empty-state h5 {
+  font-size: 1.1rem;
+  color: var(--navy);
+  margin-bottom: 0.35rem;
+}
+
+.empty-state p {
+  color: var(--slate-500);
+  font-size: 0.9rem;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.custom-footer {
+  margin-top: auto;
+  background-color: var(--surface);
+  border-top: var(--border-subtle);
+  color: var(--slate-500);
+  font-size: 0.85rem;
+  padding: 1.5rem 0;
+}
+
+/* Dialog Overlay */
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(36, 52, 71, 0.4);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.confirm-dialog {
+  background: #FFFFFF;
+  border: var(--border-subtle);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 1.75rem;
+  text-align: center;
+  max-width: 380px;
+  width: 90%;
+}
+
+.confirm-dialog h5 {
+  font-size: 1.15rem;
+  margin: 0.5rem 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sts-amount { font-size: 2.15rem; }
+  .section-header { flex-direction: column; align-items: flex-start; }
+  .section-header h1, .section-header h2 { font-size: 1.4rem; }
+  .table-custom thead th, .table-custom tbody td { padding: 0.65rem 0.75rem; font-size: 0.82rem; }
+}

@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block title %}Transactions — Smart Spend{% endblock %}
+{% block content %}
+
+<div class="section-header">
+  <div>
+    <h1 class="page-title"><i class="bi bi-arrow-left-right text-teal me-2"></i>Transactions</h1>
+    <p class="page-subtitle">View and manage all your personal expenses and income records</p>
+  </div>
+  <div class="d-flex flex-wrap gap-2">
+    <a href="{{ url_for('transactions.export', start=request.args.get('start', ''), end=request.args.get('end', '')) }}" class="btn-custom btn-outline-custom">
+      <i class="bi bi-download me-1"></i> Export CSV
+    </a>
+    <a href="{{ url_for('transactions.add') }}" class="btn-custom btn-primary-custom">
+      <i class="bi bi-plus-lg me-1"></i> Add Transaction
+    </a>
+  </div>
+</div>
+
+<!-- Filters Bar -->
+<div class="card p-3 mb-4">
+  <form method="GET" action="{{ url_for('transactions.index') }}" class="row g-2 align-items-center">
+    <div class="col-md-4">
+      <div class="input-group">
+        <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+        <input type="text" name="q" class="form-control border-start-0" placeholder="Search by note or category..." value="{{ search_query }}">
+      </div>
+    </div>
+    <div class="col-md-3">
+      <select name="type" class="form-select">
+        <option value="">All Types</option>
+        <option value="expense" {% if selected_type == 'expense' %}selected{% endif %}>Expenses Only</option>
+        <option value="income" {% if selected_type == 'income' %}selected{% endif %}>Income Only</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <select name="category" class="form-select">
+        <option value="">All Categories</option>
+        {% for c in categories %}
+          <option value="{{ c }}" {% if selected_category == c %}selected{% endif %}>{{ c }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2 d-flex gap-1">
+      <button type="submit" class="btn-custom btn-primary-custom flex-grow-1">Filter</button>
+      {% if search_query or selected_type or selected_category %}
+        <a href="{{ url_for('transactions.index') }}" class="btn-custom btn-outline-custom" title="Reset Filters"><i class="bi bi-x"></i></a>
+      {% endif %}
+    </div>
+  </form>
+</div>
+
+<!-- Transactions Table -->
+{% if transactions %}
+<div class="table-responsive card mb-4">
+  <table class="table-custom mb-0">
+    <thead>
+      <tr>
+        <th data-sort="date" style="width: 130px;">Date <span class="sort-icon">↕</span></th>
+        <th data-sort="type" style="width: 100px;">Type <span class="sort-icon">↕</span></th>
+        <th data-sort="category" style="width: 150px;">Category <span class="sort-icon">↕</span></th>
+        <th data-sort="amount" class="text-end" style="width: 140px;">Amount <span class="sort-icon">↕</span></th>
+        <th>Note</th>
+        <th class="text-end" style="width: 100px;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for t in transactions %}
+      <tr>
+        <td class="text-muted small">{{ t.date }}</td>
+        <td>
+          <span class="badge-custom {% if t.type == 'income' %}badge-income{% else %}badge-expense{% endif %}">
+            {{ t.type|capitalize }}
+          </span>
+        </td>
+        <td class="fw-semibold">{{ t.category }}</td>
+        <td class="text-end fw-bold tabular-nums {% if t.type == 'income' %}text-teal{% else %}text-coral{% endif %}">
+          {% if t.type == 'income' %}+{% else %}-{% endif %} ₹{{ "%.2f"|format(t.amount) }}
+        </td>
+        <td class="text-muted">{{ t.note or '—' }}</td>
+        <td class="text-end">
+          <div class="d-inline-flex gap-1">
+            <a href="{{ url_for('transactions.edit', id=t.id) }}" class="btn btn-sm btn-outline-secondary py-1 px-2" title="Edit">
+              <i class="bi bi-pencil"></i>
+            </a>
+            <form action="{{ url_for('transactions.delete', id=t.id) }}" method="POST" class="delete-form d-inline">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-sm btn-outline-danger py-1 px-2" title="Delete">
+                <i class="bi bi-trash"></i>
+              </button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- Server-side Pagination -->
+{% if pagination.pages > 1 %}
+<nav class="d-flex justify-content-center">
+  <ul class="pagination pagination-sm">
+    {% if pagination.has_prev %}
+      <li class="page-item">
+        <a class="page-link" href="{{ url_for('transactions.index', page=pagination.prev_num, q=search_query, type=selected_type, category=selected_category) }}">Previous</a>
+      </li>
+    {% endif %}
+    {% for p in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+      {% if p %}
+        <li class="page-item {% if p == pagination.page %}active{% endif %}">
+          <a class="page-link" href="{{ url_for('transactions.index', page=p, q=search_query, type=selected_type, category=selected_category) }}">{{ p }}</a>
+        </li>
+      {% else %}
+        <li class="page-item disabled"><span class="page-link">…</span></li>
+      {% endif %}
+    {% endfor %}
+    {% if pagination.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="{{ url_for('transactions.index', page=pagination.next_num, q=search_query, type=selected_type, category=selected_category) }}">Next</a>
+      </li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}
+
+{% else %}
+<div class="empty-state">
+  <i class="bi bi-receipt"></i>
+  <h5>No Transactions Found</h5>
+  <p>Start tracking your cash flow by recording your first transaction.</p>
+  <a href="{{ url_for('transactions.add') }}" class="btn-custom btn-primary-custom mt-3">
+    <i class="bi bi-plus-lg"></i> Add First Transaction
+  </a>
+</div>
+{% endif %}
+
+{% endblock %}

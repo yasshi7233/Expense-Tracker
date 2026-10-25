@@ -1,4 +1,44 @@
-venv/
+# Python
 __pycache__/
-*.pyc
-expense.db
+*.py[cod]
+*.pyo
+*$py.class
+*.pyd
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Environment variables and secrets
+.env
+.env.*
+
+# Allow the example environment template
+!.env.example
+
+# Local databases
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+
+# Database backups
+*.bak
+*.bak.*
+*.bak2
+*.backup
+
+# Instance data
+instance/
+
+# Local IDE / OS files
+.vscode/
+.DS_Store
+Thumbs.db
+*.log

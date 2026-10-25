@@ -194,9 +194,27 @@ The database design adheres to 3NF relational normalization:
    ```
    Open your browser at [http://127.0.0.1:5000](http://127.0.0.1:5000).
 
+## 7. Render Deployment
+
+This repository includes [`render.yaml`](./render.yaml), which provisions a PostgreSQL
+database, installs the dependencies, applies migrations, and starts Gunicorn on Render's
+assigned `$PORT`.
+
+To deploy:
+
+1. Push the repository to GitHub.
+2. In Render, choose **New > Blueprint** and select the repository.
+3. Confirm the generated `SECRET_KEY` and PostgreSQL database resources.
+4. Deploy the blueprint. Do not use `python app.py` as the production start command;
+   use `gunicorn --bind 0.0.0.0:$PORT run:app`.
+
+The `DATABASE_URL` environment variable must point to the Render PostgreSQL database.
+SQLite is suitable for local development only because Render's web-service filesystem
+is ephemeral.
+
 ---
 
-## 7. Demo Account Instructions
+## 8. Demo Account Instructions
 
 To quickly evaluate and demo the project during interviews:
 
@@ -212,7 +230,7 @@ To quickly evaluate and demo the project during interviews:
 
 ---
 
-## 8. Running the Automated Test Suite
+## 9. Running the Automated Test Suite
 
 Run the full Pytest test suite with:
 

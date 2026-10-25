@@ -77,8 +77,33 @@ def test_demo_seeder_idempotency_and_preservation(app):
         refreshed_user = User.query.filter_by(email=demo_seed.DEMO_EMAIL).first()
         assert refreshed_user.check_password("CustomPassword999!")
 
-def test_demo_seeder_rejects_production_mode():
+def test_demo_seeder_rejects_production_mode(monkeypatch):
     """Verify seeder refuses to run under production config without explicit override."""
+    monkeypatch.setenv('DATABASE_URL', 'postgresql://user:pass@localhost:5432/proddb')
+    monkeypatch.setenv('SECRET_KEY', 'test-production-secret-key-32-chars-long!')
     prod_app = create_app('production')
     with pytest.raises(RuntimeError, match="Refused to seed"):
         demo_seed.seed_demo_data(app=prod_app)
+
+def test_production_config_postgresql_url_normalization(monkeypatch):
+    """Verify postgres:// and postgresql:// are normalized to postgresql+psycopg2://."""
+    monkeypatch.setenv('DATABASE_URL', 'postgres://user:pass@render-db-host:5432/mydb')
+    monkeypatch.setenv('SECRET_KEY', 'render-generated-secret-key-production-ready')
+    prod_app = create_app('production')
+    assert prod_app.config['SQLALCHEMY_DATABASE_URI'] == 'postgresql+psycopg2://user:pass@render-db-host:5432/mydb'
+
+    monkeypatch.setenv('DATABASE_URL', 'postgresql://user:pass@render-db-host:5432/mydb')
+    prod_app2 = create_app('production')
+    assert prod_app2.config['SQLALCHEMY_DATABASE_URI'] == 'postgresql+psycopg2://user:pass@render-db-host:5432/mydb'
+
+def test_production_config_requires_database_url_and_secret(monkeypatch):
+    """Verify production fails fast if DATABASE_URL or SECRET_KEY is missing/insecure."""
+    monkeypatch.delenv('DATABASE_URL', raising=False)
+    monkeypatch.setenv('SECRET_KEY', 'render-generated-secret-key-production-ready')
+    with pytest.raises(ValueError, match="DATABASE_URL environment variable is required"):
+        create_app('production')
+
+    monkeypatch.setenv('DATABASE_URL', 'postgresql://user:pass@render-db-host:5432/mydb')
+    monkeypatch.setenv('SECRET_KEY', 'dev-insecure-secret-key-change-in-production')
+    with pytest.raises(ValueError, match="SECRET_KEY environment variable is required"):
+        create_app('production')

@@ -15,7 +15,10 @@ def create_app(config_name=None):
     template_dir = str(Path(__file__).resolve().parent / 'templates')
 
     app = Flask(__name__, static_folder=static_dir, template_folder=template_dir)
-    app.config.from_object(config[config_name])
+    cfg_class = config[config_name]
+    app.config.from_object(cfg_class)
+    if hasattr(cfg_class, 'init_app'):
+        cfg_class.init_app(app)
 
     # Jinja globals
     app.jinja_env.globals['zip'] = zip

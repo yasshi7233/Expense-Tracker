@@ -150,7 +150,7 @@ def export():
     response.headers['Content-Disposition'] = f'attachment; filename=transactions_{datetime.now().strftime("%Y%m%d")}.csv'
     return response
 
-@transactions_bp.route('/claim-legacy', methods=['GET', 'POST'])
+@transactions_bp.route('/claim-legacy', methods=['POST'])
 @login_required
 def claim_legacy():
     """Allows claiming legacy unassigned transactions (from pre-auth database) into this user account."""

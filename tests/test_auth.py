@@ -41,6 +41,9 @@ def test_login_invalid_credentials(client, user_a):
 
 def test_logout(client, user_a):
     client.post('/auth/login', data={'email': user_a.email, 'password': 'Password123!'}, follow_redirects=True)
-    res = client.get('/auth/logout', follow_redirects=True)
+    res = client.post('/auth/logout', follow_redirects=True)
     assert res.status_code == 200
     assert b'You have been securely logged out' in res.data
+
+    get_res = client.get('/auth/logout')
+    assert get_res.status_code == 405

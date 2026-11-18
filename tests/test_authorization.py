@@ -20,7 +20,7 @@ def test_data_isolation_between_users(client, user_a, user_b):
     assert float(txn_a.amount) == 450.00
 
     # Log out user A and log in as user B
-    client.get('/auth/logout', follow_redirects=True)
+    client.post('/auth/logout', follow_redirects=True)
     client.post('/auth/login', data={'email': user_b.email, 'password': 'Password123!'}, follow_redirects=True)
 
     # User B views transaction list -> must not see User A's transaction
@@ -45,4 +45,30 @@ def test_data_isolation_between_users(client, user_a, user_b):
     refreshed = db.session.get(Transaction, txn_a.id)
     assert refreshed.note == 'Private dinner'
     assert float(refreshed.amount) == 450.00
+
+
+def test_legacy_claim_requires_post(client, user_a):
+    legacy = Transaction(
+        user_id=None,
+        date='2026-10-20',
+        type='expense',
+        category='Other',
+        amount=Decimal('10.00'),
+        note='Legacy transaction',
+    )
+    db.session.add(legacy)
+    db.session.commit()
+
+    client.post('/auth/login', data={
+        'email': user_a.email,
+        'password': 'Password123!',
+    }, follow_redirects=True)
+
+    get_res = client.get('/transactions/claim-legacy')
+    assert get_res.status_code == 405
+    assert db.session.get(Transaction, legacy.id).user_id is None
+
+    post_res = client.post('/transactions/claim-legacy', follow_redirects=True)
+    assert post_res.status_code == 200
+    assert db.session.get(Transaction, legacy.id).user_id == user_a.id
 

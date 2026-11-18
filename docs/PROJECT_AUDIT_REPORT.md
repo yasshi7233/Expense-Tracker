@@ -219,14 +219,14 @@ flowchart TD
 | `GET` | `dashboard.index` | `/` | `dashboard` | Optional | Renders landing page for anonymous visitors; renders overview dashboard for authenticated users. |
 | `GET, POST` | `auth.signup` | `/auth/signup` | `auth` | No | User registration with email uniqueness and salted password hashing. |
 | `GET, POST` | `auth.login` | `/auth/login` | `auth` | No | User authentication with session initiation and safe redirect handling. |
-| `GET` | `auth.logout` | `/auth/logout` | `auth` | Yes | Terminates session and redirects to login page. |
+| `POST` | `auth.logout` | `/auth/logout` | `auth` | Yes | Terminates session and redirects to login page. |
 | `GET, POST` | `auth.profile` | `/auth/profile` | `auth` | Yes | Edit name and change account password. |
 | `GET` | `transactions.index`| `/transactions/` | `transactions` | Yes | Paginated transaction listing with search, filtering, and sorting. |
 | `GET, POST` | `transactions.add` | `/transactions/add` | `transactions` | Yes | Form submission to create income or expense record. |
 | `GET, POST` | `transactions.edit` | `/transactions/edit/<int:id>` | `transactions` | Yes | Form submission to update an existing owned transaction (403 IDOR blocked). |
 | `POST` | `transactions.delete` | `/transactions/delete/<int:id>` | `transactions` | Yes | Deletes an owned transaction (403 IDOR blocked). |
 | `GET` | `transactions.export` | `/transactions/export` | `transactions` | Yes | Downloads authenticated user's records as a sanitized CSV file. |
-| `GET, POST` | `transactions.claim_legacy` | `/transactions/claim-legacy` | `transactions` | Yes | Utility endpoint allowing an authenticated user to claim pre-auth unassigned transactions. |
+| `POST` | `transactions.claim_legacy` | `/transactions/claim-legacy` | `transactions` | Yes | Utility endpoint allowing an authenticated user to claim pre-auth unassigned transactions. |
 | `GET` | `reports.index` | `/reports/` | `reports` | Yes | Monthly analytics view with category breakdowns and Matplotlib charts. |
 | `GET` | `static` | `/static/<path:filename>` | Builtin | No | Serves CSS, JS, vendor icons, and favicon. |
 
@@ -269,7 +269,7 @@ flowchart TD
 
 ### Security Recommendations for Production
 - Set `SECRET_KEY` in production via a strong 32-byte cryptographically random environment variable (never use default development key).
-- In public deployments, route `auth.logout` via a POST request with CSRF token rather than GET to eliminate speculative browser pre-fetching logout risks.
+- `auth.logout` now uses a POST request with a CSRF token, eliminating speculative browser pre-fetching logout risks.
 
 ---
 

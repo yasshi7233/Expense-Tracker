@@ -59,7 +59,7 @@ def test_csv_export_user_data_isolation(client, user_a, user_b):
         'amount': '750.00',
         'note': 'Secret User A Dinner'
     }, follow_redirects=True)
-    client.get('/auth/logout', follow_redirects=True)
+    client.post('/auth/logout', follow_redirects=True)
 
     # Log in as User B and export CSV
     client.post('/auth/login', data={'email': user_b.email, 'password': 'Password123!'}, follow_redirects=True)
